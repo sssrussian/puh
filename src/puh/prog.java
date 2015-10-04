@@ -144,7 +144,7 @@ public class prog extends JFrame {
 					conn = null;
 				}
 				catch (Exception e) {}
-				if (flag = false){
+				if (flag == false){
 					JOptionPane.showMessageDialog(
 							null,
 							"Возможно интернет не подключен.",
