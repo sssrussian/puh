@@ -1,7 +1,6 @@
 package puh;
 
 import java.awt.BorderLayout;
-
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -15,8 +14,13 @@ import javax.swing.JButton;
 import javax.swing.ScrollPaneConstants;
 //
 import javax.net.*;
+
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -120,7 +124,33 @@ public class prog extends JFrame {
 		JButton buttonOk = new JButton("\u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u044C");
 		buttonOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				String str = "http://puh/tovar.php"+makeGet();
+				boolean flag = false;
+				try {
+					URL url = new URL(str);
+					HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+					conn.connect();
+					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					String inputLine = in.readLine().trim();
+					if(inputLine.indexOf('~') >= 0) {
+						flag = true;
+						String[] mass = inputLine.split("~");
+						for(int i=0;i<mass.length;i++) {
+							table.setValueAt(mass[i], i, 2);
+						}
+					}
+					in.close();
+					conn.disconnect();
+					conn = null;
+				}
+				catch (Exception e) {}
+				if (flag = false){
+					JOptionPane.showMessageDialog(
+							null,
+							"Возможно интернет не подключен.",
+							"Ошибка отправки данных.",
+							0);
+				}
 			}
 		});
 		buttonOk.setBounds(445, 276, 89, 23);
